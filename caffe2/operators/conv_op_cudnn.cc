@@ -153,11 +153,7 @@ class CudnnConvOpBase : public ConvPoolOpBase<CUDAContext> {
               desc_,
               cudnnTypeWrapper<T>::type,
               N,
-#if CUDNN_VERSION_MIN(7,0,0)
               C,
-#else
-              C / group_,
-#endif
               H,
               W,
               H * W * C,
@@ -165,9 +161,7 @@ class CudnnConvOpBase : public ConvPoolOpBase<CUDAContext> {
               W * C,
               C));
         } else {
-#if !CUDNN_VERSION_MIN(7,0,0)
           C = C / group_;
-#endif
           vector<int> dims = {N, H, W, D, C};
           vector<int> strides = {H * W * D * C, W * D * C, D * C, C, 1};
           CUDNN_ENFORCE(cudnnSetTensorNdDescriptor(
@@ -184,11 +178,7 @@ class CudnnConvOpBase : public ConvPoolOpBase<CUDAContext> {
               desc_,
               cudnnTypeWrapper<T>::type,
               N,
-#if CUDNN_VERSION_MIN(7,0,0)
               C,
-#else
-              C / group_,
-#endif
               H,
               W,
               C * H * W,
@@ -196,9 +186,7 @@ class CudnnConvOpBase : public ConvPoolOpBase<CUDAContext> {
               W,
               1));
         } else {
-#if !CUDNN_VERSION_MIN(7,0,0)
           C = C / group_;
-#endif
           vector<int> dims = {N, C, H, W, D};
           vector<int> strides = {C * H * W * D, H * W * D, W * D, D, 1};
           CUDNN_ENFORCE(cudnnSetTensorNdDescriptor(
@@ -369,21 +357,15 @@ bool CudnnConvOp::DoRunWithType() {
             filter_desc_,
             cudnnTypeWrapper<T_W>::type,
             GetCudnnTensorFormat(order_),
-#if CUDNN_VERSION_MIN(7,0,0)
             M,
-#else
-            M / group_,
-#endif
             C / group_,
             kernel_h(),
             kernel_w()));
       } else {
         vector<int> dims(filter.dims().begin(), filter.dims().end());
         dims[0] /= group_;
-#if !CUDNN_VERSION_MIN(7,0,0)
         order_ == StorageOrder::NCHW ? dims[1] /= group_
                                      : dims[filter.ndim() - 1] /= group_;
-#endif
         dims[filter.ndim() - 1] /= group_;
         CUDNN_ENFORCE(cudnnSetFilterNdDescriptor(
             filter_desc_,
@@ -443,7 +425,6 @@ bool CudnnConvOp::DoRunWithType() {
           strides.data()));
     }
     // Set the convolution descriptor
-#if CUDNN_VERSION_MIN(6,0,0)
     if (kernel_.size() == 2) {
       CUDNN_ENFORCE(cudnnSetConvolution2dDescriptor(
           conv_desc_,
@@ -465,31 +446,7 @@ bool CudnnConvOp::DoRunWithType() {
           CUDNN_CROSS_CORRELATION,
           cudnnTypeWrapper<MATH>::type));
     }
-#else
-    if (kernel_.size() == 2) {
-      CUDNN_ENFORCE(cudnnSetConvolution2dDescriptor(
-          conv_desc_,
-          pad_t(),
-          pad_l(),
-          stride_h(),
-          stride_w(),
-          1,
-          1,
-          CUDNN_CROSS_CORRELATION));
-    } else {
-      vector<int> ones(dilation_.size(), 1);
-      CUDNN_ENFORCE(cudnnSetConvolutionNdDescriptor(
-          conv_desc_,
-          kernel_.size(),
-          pads_.data(),
-          stride_.data(),
-          ones.data(),
-          CUDNN_CROSS_CORRELATION,
-          cudnnTypeWrapper<MATH>::type));
-    }
-#endif
 
-#if CUDNN_VERSION_MIN(7,0,0)
     // enable TensorCore math if desired
     enable_tensor_core_ &= TensorCoreAvailable();
     if (enable_tensor_core_) {
@@ -499,7 +456,6 @@ bool CudnnConvOp::DoRunWithType() {
 
     // enable cuDNN conv groups
     CUDNN_CHECK(cudnnSetConvolutionGroupCount(conv_desc_, group_));
-#endif
 
     if (force_algo_[ALGO_FWD] >= 0) {
       algo_ = (cudnnConvolutionFwdAlgo_t)force_algo_[ALGO_FWD];
@@ -562,7 +518,6 @@ bool CudnnConvOp::DoRunWithType() {
 
   // Now, actually run the computation.
   // Run directly through cuDNN if possible
-#if CUDNN_VERSION_MIN(7,0,0)
   cudnn_wrapper_.with_cudnn_state(cudnn_state_, [&](CuDNNState* state) {
     CUDNN_ENFORCE(cudnnConvolutionForward(
         state->cudnn_handle(),
@@ -579,27 +534,6 @@ bool CudnnConvOp::DoRunWithType() {
         top_desc_,
         Y->template mutable_data<T_Y>()));
   });
-#else
-  // otherwise manually run through groups
-  for (int i = 0; i < group_; ++i) {
-    cudnn_wrapper_.with_cudnn_state(cudnn_state_, [&](CuDNNState* state) {
-      CUDNN_ENFORCE(cudnnConvolutionForward(
-          state->cudnn_handle(),
-          cudnnTypeWrapper<T_X>::kOne(),
-          bottom_desc_,
-          X.template data<T_X>() + i * group_offset_X,
-          filter_desc_,
-          filter.template data<T_W>() + i * group_offset_filter,
-          conv_desc_,
-          algo_,
-          state->workspace().get(cudnn_ws_nbytes_),
-          cudnn_ws_nbytes_,
-          cudnnTypeWrapper<T_Y>::kZero(),
-          top_desc_,
-          Y->template mutable_data<T_Y>() + i * group_offset_Y));
-    });
-  }
-#endif
   // Bias
   if (InputSize() == 3) {
     auto& bias = Input(BIAS);
@@ -733,19 +667,13 @@ bool CudnnConvGradientOp::DoRunWithType() {
             filter_desc_,
             cudnnTypeWrapper<T_W>::type,
             GetCudnnTensorFormat(order_),
-#if CUDNN_VERSION_MIN(7,0,0)
             M,
-#else
-            M / group_,
-#endif
             C / group_,
             kernel_h(),
             kernel_w()));
       } else {
         vector<int> dims(filter.dims().begin(), filter.dims().end());
-#if !CUDNN_VERSION_MIN(7,0,0)
         dims[0] /= group_;
-#endif
         order_ == StorageOrder::NCHW ? dims[1] /= group_
                                      : dims[filter.ndim() - 1] /= group_;
         CUDNN_ENFORCE(cudnnSetFilterNdDescriptor(
@@ -806,7 +734,6 @@ bool CudnnConvGradientOp::DoRunWithType() {
           strides.data()));
     }
     // Set the convolution descriptor
-#if CUDNN_VERSION_MIN(6,0,0)
     if (kernel_.size() == 2) {
       CUDNN_ENFORCE(cudnnSetConvolution2dDescriptor(
           conv_desc_,
@@ -828,31 +755,7 @@ bool CudnnConvGradientOp::DoRunWithType() {
           CUDNN_CROSS_CORRELATION,
           cudnnTypeWrapper<MATH>::type));
     }
-#else
-    if (kernel_.size() == 2) {
-      CUDNN_ENFORCE(cudnnSetConvolution2dDescriptor(
-          conv_desc_,
-          pad_t(),
-          pad_l(),
-          stride_h(),
-          stride_w(),
-          1,
-          1,
-          CUDNN_CROSS_CORRELATION));
-    } else {
-      vector<int> ones(dilation_.size(), 1);
-      CUDNN_ENFORCE(cudnnSetConvolutionNdDescriptor(
-          conv_desc_,
-          kernel_.size(),
-          pads_.data(),
-          stride_.data(),
-          ones.data(),
-          CUDNN_CROSS_CORRELATION,
-          cudnnTypeWrapper<MATH>::type));
-    }
-#endif
 
-#if CUDNN_VERSION_MIN(7,0,0)
     // enable TensorCore math if desired
     enable_tensor_core_ &= TensorCoreAvailable();
     if (enable_tensor_core_) {
@@ -862,7 +765,6 @@ bool CudnnConvGradientOp::DoRunWithType() {
 
     // set cuDNN groups if appropriate
     CUDNN_CHECK(cudnnSetConvolutionGroupCount(conv_desc_, group_));
-#endif
 
     // Set the workspace
     size_t bwd_filter_ws_size, bwd_data_ws_size;
