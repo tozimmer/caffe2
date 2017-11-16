@@ -99,6 +99,7 @@ else()
     endif()
     set(${flag_var} "${${flag_var}} /MP /bigobj")
   endforeach(flag_var)
+  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /FORCE:MULTIPLE")
 endif()
 
 if(NOT APPLE AND UNIX)
