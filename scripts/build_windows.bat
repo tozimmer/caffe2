@@ -34,6 +34,9 @@ if NOT DEFINED CMAKE_GENERATOR (
   )
 )
 
+set CMAKE_GENERATOR="Visual Studio 14 2015 Win64"
+set USE_CUDA=ON
+
 if not exist %CAFFE2_ROOT%\build_host_protoc\bin\protoc.exe call %CAFFE2_ROOT%\scripts\build_host_protoc.bat || goto :label_error
 
 echo CAFFE2_ROOT=%CAFFE2_ROOT%
