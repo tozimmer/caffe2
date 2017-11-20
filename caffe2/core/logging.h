@@ -22,6 +22,8 @@
 #include <functional>
 #include <limits>
 #include <sstream>
+#include <iostream>
+#include <string>
 
 #include "caffe2/core/flags.h"
 #include "caffe2/proto/caffe2.pb.h"
