@@ -56,9 +56,9 @@ cmake .. ^
   -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% ^
   -DUSE_CUDA=%USE_CUDA% ^
   -DUSE_NNPACK=OFF ^
-  -DUSE_GLOG=ON ^
-  -DUSE_GFLAGS=ON ^
-  -DUSE_LMDB=OFF ^
+  -DUSE_GLOG=OFF ^
+  -DUSE_GFLAGS=OFF ^
+  -DUSE_LMDB=ON ^
   -DUSE_LEVELDB=OFF ^
   -DUSE_ROCKSDB=OFF ^
   -DUSE_OPENCV=OFF ^
@@ -66,6 +66,9 @@ cmake .. ^
   -DBUILD_PYTHON=ON ^
   -DBUILD_BINARY=OFF ^
   -DCAFFE2_CUSTOM_PROTOC_EXECUTABLE=%CAFFE2_ROOT%\build_host_protoc\bin\protoc.exe ^
+  -DLMDB_DIR=C:\Users\tozim\source\lmdb.v140.0.9.19.3\build\native ^
+  -DLMDB_INCLUDE_DIR=C:\\Users\\tozim\\source\\lmdb.v140.0.9.19.3\\build\\native\\include ^
+  -DLMDB_LIBRARIES=C:\Users\tozim\source\lmdb.v140.0.9.19.3\build\native\lib\x64\Release\lmdb.lib ^
   || goto :label_error
 
 :: Actually run the build
