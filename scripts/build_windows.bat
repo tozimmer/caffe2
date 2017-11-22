@@ -37,7 +37,8 @@ if NOT DEFINED CMAKE_GENERATOR (
 set CMAKE_GENERATOR="Visual Studio 14 2015 Win64"
 set USE_CUDA=ON
 
-if not exist %CAFFE2_ROOT%\build_host_protoc\bin\protoc.exe call %CAFFE2_ROOT%\scripts\build_host_protoc.bat || goto :label_error
+:: build_host_protoc.bat is not used, compiled version of protobuf is present (C:\bin C:\lib C:\include)
+:: if not exist %CAFFE2_ROOT%\build_host_protoc\bin\protoc.exe call %CAFFE2_ROOT%\scripts\build_host_protoc.bat || goto :label_error
 
 echo CAFFE2_ROOT=%CAFFE2_ROOT%
 echo CMAKE_GENERATOR=%CMAKE_GENERATOR%
@@ -65,8 +66,8 @@ cmake .. ^
   -DBUILD_SHARED_LIBS=OFF ^
   -DBUILD_PYTHON=OFF ^
   -DBUILD_BINARY=OFF ^
-  -DCAFFE2_CUSTOM_PROTOC_EXECUTABLE=C:\\bin\\protoc.exe ^
-  -DProtobuf_INCLUDE_DIRS=C:\\include ^
+  -DProtobuf_PROTOC_EXECUTABLE=C:\\bin\\protoc.exe ^
+  -DProtobuf_INCLUDE_DIR=C:\\include ^
   -DProtobuf_LIBRARIES=C:\\lib\\libprotobuf.lib ^
   -DProtobuf_PROTOC_LIBRARIES=C:\\lib\\libprotoc.lib ^
   -DProtobuf_LITE_LIBRARIES=C:\\lib\\libprotobuf-lite.lib ^
