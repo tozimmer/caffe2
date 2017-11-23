@@ -405,8 +405,11 @@ class RecurrentNetworkExecutorBase {
         LOG(INFO) << " parent: " << j << ": " << rnn_ops[j].op->type();
       }
     }
-
-    LOG(INFO) << "recurrent_inputs:" << recurrent_input_map_;
+	
+	LOG(INFO) << "recurrent_inputs:";
+	for(auto const &ent : recurrent_input_map_) {
+		LOG(INFO) << ent.first << ": " << ent.second;
+	}
 
     for (auto& rnn_op : rnn_ops) {
       LOG(INFO) << "Operator " << rnn_op.order;

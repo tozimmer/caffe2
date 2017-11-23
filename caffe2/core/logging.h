@@ -73,7 +73,7 @@ inline void MakeStringInternal(std::stringstream& /*ss*/) {}
 
 template <typename T>
 inline void MakeStringInternal(std::stringstream& ss, const T& t) {
-  ss << t;
+  ss << "";
 }
 
 template <typename T, typename... Args>

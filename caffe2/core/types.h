@@ -17,10 +17,6 @@
 #ifndef CAFFE2_CORE_TYPES_H_
 #define CAFFE2_CORE_TYPES_H_
 
-#include <cstdint>
-#include <string>
-#include <type_traits>
-
 #include "caffe2/core/common.h"
 #include "caffe2/core/logging.h"
 #include "caffe2/core/typeid.h"

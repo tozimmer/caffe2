@@ -50,6 +50,7 @@ cd %CAFFE2_ROOT%\build
 :: Set up cmake. We will skip building the test files right now.
 :: TODO: enable cuda support.
 cmake .. ^
+  -Wno-dev ^
   -G%CMAKE_GENERATOR% ^
   -DCMAKE_VERBOSE_MAKEFILE=1 ^
   -DBUILD_TEST=OFF ^
@@ -57,7 +58,7 @@ cmake .. ^
   -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% ^
   -DUSE_CUDA=%USE_CUDA% ^
   -DUSE_NNPACK=OFF ^
-  -DUSE_GLOG=OFF ^
+  -DUSE_GLOG=ON ^
   -DUSE_GFLAGS=ON ^
   -DUSE_LMDB=ON ^
   -DUSE_LEVELDB=OFF ^
@@ -71,14 +72,14 @@ cmake .. ^
   -DProtobuf_LIBRARIES=C:\\lib\\libprotobuf.lib ^
   -DProtobuf_PROTOC_LIBRARIES=C:\\lib\\libprotoc.lib ^
   -DProtobuf_LITE_LIBRARIES=C:\\lib\\libprotobuf-lite.lib ^
-  -DLMDB_DIR=C:\\ ^
   -DLMDB_INCLUDE_DIR=C:\\include ^
   -DLMDB_LIBRARIES=C:\\lib\\lmdb.lib ^
-  -DGFLAGS_ROOT_DIR=C:\\ ^
   -DGFLAGS_INCLUDE_DIRS=C:\\include ^
-  -DGFLAGS_LIBRARIES=C:\\lib\\gflags_static.lib ^
-  -DGFLAGS_LIBRARYRARY_DIRS=C:\\lib ^
+  -DGFLAGS_LIBRARIES=C:\\lib\\gflags.lib ^
+  -DGLOG_INCLUDE_DIR=C:\\include ^
+  -DGLOG_LIBRARIES=C:\\lib\\glog.lib ^
   -Dpybind11_INCLUDE_DIRS=C:\\include ^
+  -DCUB_INCLUDE_DIRS=C:\\include ^
   || goto :label_error
 
 :: Actually run the build
