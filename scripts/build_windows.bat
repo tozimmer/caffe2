@@ -14,7 +14,8 @@ if NOT DEFINED CMAKE_BUILD_TYPE (
 )
 
 if NOT DEFINED USE_CUDA (
-  set USE_CUDA=OFF
+  :: In default we use CUDA
+  set USE_CUDA=ON
 )
 
 if NOT DEFINED CMAKE_GENERATOR (
@@ -29,13 +30,10 @@ if NOT DEFINED CMAKE_GENERATOR (
       exit /b
     )
   ) else (
-    :: In default we use win64 VS 2017.
-    set CMAKE_GENERATOR="Visual Studio 15 2017 Win64"
+    :: In default we use win64 VS 2015.
+    set CMAKE_GENERATOR="Visual Studio 14 2015 Win64"
   )
 )
-
-set CMAKE_GENERATOR="Visual Studio 14 2015 Win64"
-set USE_CUDA=ON
 
 :: build_host_protoc.bat is not used, compiled version of protobuf is present (C:\bin C:\lib C:\include)
 :: if not exist %CAFFE2_ROOT%\build_host_protoc\bin\protoc.exe call %CAFFE2_ROOT%\scripts\build_host_protoc.bat || goto :label_error
@@ -48,7 +46,6 @@ if not exist %CAFFE2_ROOT%\build mkdir %CAFFE2_ROOT%\build
 cd %CAFFE2_ROOT%\build
 
 :: Set up cmake. We will skip building the test files right now.
-:: TODO: enable cuda support.
 cmake .. ^
   -Wno-dev ^
   -G%CMAKE_GENERATOR% ^
@@ -67,19 +64,19 @@ cmake .. ^
   -DBUILD_SHARED_LIBS=OFF ^
   -DBUILD_PYTHON=OFF ^
   -DBUILD_BINARY=OFF ^
-  -DProtobuf_PROTOC_EXECUTABLE=C:\\bin\\protoc.exe ^
-  -DProtobuf_INCLUDE_DIR=C:\\include ^
-  -DProtobuf_LIBRARIES=C:\\lib\\libprotobuf.lib ^
-  -DProtobuf_PROTOC_LIBRARIES=C:\\lib\\libprotoc.lib ^
-  -DProtobuf_LITE_LIBRARIES=C:\\lib\\libprotobuf-lite.lib ^
-  -DLMDB_INCLUDE_DIR=C:\\include ^
-  -DLMDB_LIBRARIES=C:\\lib\\lmdb.lib ^
-  -DGFLAGS_INCLUDE_DIRS=C:\\include ^
-  -DGFLAGS_LIBRARIES=C:\\lib\\gflags.lib ^
-  -DGLOG_INCLUDE_DIR=C:\\include ^
-  -DGLOG_LIBRARIES=C:\\lib\\glog.lib ^
-  -Dpybind11_INCLUDE_DIRS=C:\\include ^
-  -DCUB_INCLUDE_DIRS=C:\\include ^
+  -DProtobuf_PROTOC_EXECUTABLE=%CAFFE2_ROOT%\\vs2015\\bin\\protoc.exe ^
+  -DProtobuf_INCLUDE_DIR=%CAFFE2_ROOT%\\vs2015\\include ^
+  -DProtobuf_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\libprotobuf.lib ^
+  -DProtobuf_PROTOC_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\libprotoc.lib ^
+  -DProtobuf_LITE_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\libprotobuf-lite.lib ^
+  -DLMDB_INCLUDE_DIR=%CAFFE2_ROOT%\\vs2015\\include ^
+  -DLMDB_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\lmdb.lib ^
+  -DGFLAGS_INCLUDE_DIRS=%CAFFE2_ROOT%\\vs2015\\include ^
+  -DGFLAGS_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\gflags.lib ^
+  -DGLOG_INCLUDE_DIR=%CAFFE2_ROOT%\\vs2015\\include ^
+  -DGLOG_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\glog.lib ^
+  -Dpybind11_INCLUDE_DIRS=%CAFFE2_ROOT%\\vs2015\\include ^
+  -DCUB_INCLUDE_DIRS=%CAFFE2_ROOT%\\vs2015\\include ^
   || goto :label_error
 
 :: Actually run the build
