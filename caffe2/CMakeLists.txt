@@ -188,7 +188,6 @@ if (BUILD_TEST)
   endforeach()
 endif()
 
-
 if (BUILD_PYTHON)
   # ---[ Python.
   add_library(caffe2_pybind11_state MODULE ${Caffe2_CPU_PYTHON_SRCS})

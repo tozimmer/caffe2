@@ -150,11 +150,13 @@ else()
   # Since one would use glog, gflags and protobuf functionalities, any
   # dependent library will have to depend on glog, gflags and protobuf
   # as well, so we mark them as INTERFACE transitive dependency.
-  target_link_libraries(caffe2 INTERFACE glog gflags protobuf)
+  target_link_libraries(caffe2 INTERFACE ${CMAKE_SOURCE_DIR}/vs2015/lib/glog.lib ${CMAKE_SOURCE_DIR}/vs2015/lib/gflags.lib ${CMAKE_SOURCE_DIR}/vs2015/lib/libprotobuf.lib)
   if (USE_CUDA)
-    target_link_libraries(caffe2_gpu INTERFACE glog gflags protobuf)
+    target_link_libraries(caffe2_gpu INTERFACE ${CMAKE_SOURCE_DIR}/vs2015/lib/glog.lib ${CMAKE_SOURCE_DIR}/vs2015/lib/gflags.lib ${CMAKE_SOURCE_DIR}/vs2015/lib/libprotobuf.lib)
   endif()
 endif()
+
+
 
 # Note(jiayq): Android cmake has an unresolved issue right now
 # (install(EXPORT "Caffe2Targets" ...) includes target "caffe2" which
@@ -178,6 +180,8 @@ if (NOT ANDROID)
       FILE Caffe2Targets.cmake
       COMPONENT dev)
 endif()
+
+include_directories( ${PROJECT_BINARY_DIR}/vs2015/include)
 
 
 # ---[ Modules

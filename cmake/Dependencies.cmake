@@ -124,7 +124,7 @@ endif()
 # ---[ LMDB
 if(USE_LMDB)
   caffe2_include_directories(${LMDB_INCLUDE_DIR})
-  list(APPEND Caffe2_DEPENDENCY_LIBS "ntdll.lib" ${LMDB_LIBRARIES})
+  list(APPEND Caffe2_DEPENDENCY_LIBS msvcrt.lib msvcmrt.lib ntdll.lib ${LMDB_LIBRARIES})
 endif()
 
 # ---[ LevelDB

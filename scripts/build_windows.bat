@@ -55,28 +55,24 @@ cmake .. ^
   -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% ^
   -DUSE_CUDA=%USE_CUDA% ^
   -DUSE_NNPACK=OFF ^
-  -DUSE_GLOG=ON ^
-  -DUSE_GFLAGS=ON ^
+  -DUSE_GLOG=OFF ^
+  -DUSE_GFLAGS=OFF ^
   -DUSE_LMDB=ON ^
   -DUSE_LEVELDB=OFF ^
   -DUSE_ROCKSDB=OFF ^
   -DUSE_OPENCV=OFF ^
   -DBUILD_SHARED_LIBS=OFF ^
-  -DBUILD_PYTHON=OFF ^
+  -DBUILD_PYTHON=ON ^
   -DBUILD_BINARY=OFF ^
   -DProtobuf_PROTOC_EXECUTABLE=%CAFFE2_ROOT%\\vs2015\\bin\\protoc.exe ^
   -DProtobuf_INCLUDE_DIR=%CAFFE2_ROOT%\\vs2015\\include ^
   -DProtobuf_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\libprotobuf.lib ^
   -DProtobuf_PROTOC_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\libprotoc.lib ^
   -DProtobuf_LITE_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\libprotobuf-lite.lib ^
-  -DLMDB_INCLUDE_DIR=%CAFFE2_ROOT%\\vs2015\\include ^
-  -DLMDB_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\lmdb.lib ^
-  -DGFLAGS_INCLUDE_DIRS=%CAFFE2_ROOT%\\vs2015\\include ^
-  -DGFLAGS_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\gflags.lib ^
-  -DGLOG_INCLUDE_DIR=%CAFFE2_ROOT%\\vs2015\\include ^
-  -DGLOG_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\glog.lib ^
   -Dpybind11_INCLUDE_DIRS=%CAFFE2_ROOT%\\vs2015\\include ^
   -DCUB_INCLUDE_DIRS=%CAFFE2_ROOT%\\vs2015\\include ^
+  -DLMDB_INCLUDE_DIR=%CAFFE2_ROOT%\\vs2015\\include ^
+  -DLMDB_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\lmdb.lib ^
   || goto :label_error
 
 :: Actually run the build
