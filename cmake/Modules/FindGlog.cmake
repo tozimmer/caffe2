@@ -15,19 +15,12 @@ set(GLOG_ROOT_DIR "" CACHE PATH "Folder contains Google glog")
 
 if(NOT WIN32)
     find_path(GLOG_INCLUDE_DIR glog/logging.h
-        PATHS ${GLOG_ROOT_DIR})
+        PATHS ${GLOG_ROOT_DIR}/include)
 endif()
 
 if(MSVC)
-    find_package(glog NO_MODULE)
-    if(TARGET glog)
-      set(GLOG_LIBRARY glog)
-    elseif(TARGET glog::glog)
-      set(GLOG_LIBRARY glog::glog)
-    endif()
-    if(TARGET ${GLOG_LIBRARY})
-      get_target_property(GLOG_INCLUDE_DIR ${GLOG_LIBRARY} INTERFACE_INCLUDE_DIRECTORIES)
-    endif()
+    find_path(GLOG_INCLUDE_DIR NAMES "glog/logging.h" PATHS "${GLOG_ROOT_DIR}/include")
+    find_library(GLOG_LIBRARY NAMES glog   PATHS "${GLOG_ROOT_DIR}/lib")
 else()
     find_library(GLOG_LIBRARY glog
         PATHS ${GLOG_ROOT_DIR}

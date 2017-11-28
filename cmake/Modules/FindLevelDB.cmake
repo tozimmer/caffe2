@@ -6,12 +6,12 @@
 
 # Look for the header file.
 find_path(LevelDB_INCLUDE NAMES leveldb/db.h
-                          PATHS $ENV{LEVELDB_ROOT}/include /opt/local/include /usr/local/include /usr/include
+                          PATHS "${LEVELDB_ROOT}/include" $ENV{LEVELDB_ROOT}/include /opt/local/include /usr/local/include /usr/include
                           DOC "Path in which the file leveldb/db.h is located." )
 
 # Look for the library.
 find_library(LevelDB_LIBRARY NAMES leveldb
-                             PATHS /usr/lib $ENV{LEVELDB_ROOT}/lib
+                             PATHS /usr/lib $ENV{LEVELDB_ROOT}/lib "${LEVELDB_ROOT}/lib"
                              DOC "Path to leveldb library." )
 
 include(FindPackageHandleStandardArgs)
@@ -24,21 +24,8 @@ if(LEVELDB_FOUND)
   mark_as_advanced(LevelDB_INCLUDE LevelDB_LIBRARY)
 
   if(EXISTS "${LevelDB_INCLUDE}/leveldb/db.h")
-    file(STRINGS "${LevelDB_INCLUDE}/leveldb/db.h" __version_lines
-           REGEX "static const int k[^V]+Version[ \t]+=[ \t]+[0-9]+;")
-
-    foreach(__line ${__version_lines})
-      if(__line MATCHES "[^k]+kMajorVersion[ \t]+=[ \t]+([0-9]+);")
-        set(LEVELDB_VERSION_MAJOR ${CMAKE_MATCH_1})
-      elseif(__line MATCHES "[^k]+kMinorVersion[ \t]+=[ \t]+([0-9]+);")
-        set(LEVELDB_VERSION_MINOR ${CMAKE_MATCH_1})
-      endif()
-    endforeach()
-
-    if(LEVELDB_VERSION_MAJOR AND LEVELDB_VERSION_MINOR)
-      set(LEVELDB_VERSION "${LEVELDB_VERSION_MAJOR}.${LEVELDB_VERSION_MINOR}")
-    endif()
-
-    # caffe_clear_vars(__line __version_lines)
+    caffe_parse_header("${LevelDB_INCLUDE}/leveldb/db.h"
+                     LEVELDB_VERION_LINES LEVELDB_VERSION_MAJOR LEVELDB_VERSION_MINOR LEVELDB_VERSION_PATCH)
+    set(LEVELDB_VERSION "${LEVELDB_VERSION_MAJOR}.${LEVELDB_VERSION_MINOR}.${LEVELDB_VERSION_PATCH}")
   endif()
 endif()

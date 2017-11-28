@@ -11,7 +11,7 @@
 find_path(Snappy_INCLUDE_DIR NAMES snappy.h
                              PATHS ${SNAPPY_ROOT_DIR} ${SNAPPY_ROOT_DIR}/include)
 
-find_library(Snappy_LIBRARIES NAMES snappy
+find_library(Snappy_LIBRARIES NAMES snappy64
                               PATHS ${SNAPPY_ROOT_DIR} ${SNAPPY_ROOT_DIR}/lib)
 
 include(FindPackageHandleStandardArgs)

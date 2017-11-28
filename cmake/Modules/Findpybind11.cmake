@@ -4,6 +4,7 @@
 
 find_path(pybind11_INCLUDE_DIR
 	NAMES pybind11/pybind11.h
+	PATHS "${pybind11_ROOT_DIR}/include"
 	DOC "The directory where pybind11 includes reside"
 )
 
