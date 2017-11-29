@@ -64,13 +64,10 @@ cmake .. ^
   -DBUILD_PYTHON=ON ^
   -DBUILD_BINARY=OFF ^
   -DEIGEN3_ROOT_DIR=%CAFFE2_ROOT%\\third_party\\eigen ^
-  -DCUB_INCLUDE_DIR=%CAFFE2_ROOT%\\vs2015\\include ^
-  -DLMDB_DIR=%CAFFE2_ROOT%\\vs2015 ^
-  -DLEVELDB_ROOT=%CAFFE2_ROOT%\\vs2015 ^
-  -DSNAPPY_ROOT_DIR=%CAFFE2_ROOT%\\vs2015 ^
-  -DGLOG_ROOT_DIR=%CAFFE2_ROOT%\\vs2015 ^
-  -DGFLAGS_ROOT_DIR=%CAFFE2_ROOT%\\vs2015 ^
-  -Dpybind11_ROOT_DIR=%CAFFE2_ROOT%\\vs2015 ^
+  -DCUB_INCLUDE_DIR=%CAFFE2_ROOT%\\third_party\\cub ^
+  -DLMDB_DIR=%CAFFE2_ROOT%\\third_party\\lmdb_msvc14 ^
+  -Dpybind11_ROOT_DIR=%CAFFE2_ROOT%\\third_party\\pybind11 ^
+  -DCAFFE2_CUSTOM_PROTOC_EXECUTABLE=%CAFFE2_ROOT%\build_host_protoc\bin\protoc.exe ^
   || goto :label_error
 
 :: Actually run the build
