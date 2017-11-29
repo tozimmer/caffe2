@@ -35,8 +35,7 @@ if NOT DEFINED CMAKE_GENERATOR (
   )
 )
 
-:: build_host_protoc.bat is not used, compiled version of protobuf is present (C:\bin C:\lib C:\include)
-:: if not exist %CAFFE2_ROOT%\build_host_protoc\bin\protoc.exe call %CAFFE2_ROOT%\scripts\build_host_protoc.bat || goto :label_error
+if not exist %CAFFE2_ROOT%\build_host_protoc\bin\protoc.exe call %CAFFE2_ROOT%\scripts\build_host_protoc.bat || goto :label_error
 
 echo CAFFE2_ROOT=%CAFFE2_ROOT%
 echo CMAKE_GENERATOR=%CMAKE_GENERATOR%
@@ -64,11 +63,6 @@ cmake .. ^
   -DBUILD_SHARED_LIBS=OFF ^
   -DBUILD_PYTHON=ON ^
   -DBUILD_BINARY=OFF ^
-  -DProtobuf_PROTOC_EXECUTABLE=%CAFFE2_ROOT%\\vs2015\\bin\\protoc.exe ^
-  -DProtobuf_INCLUDE_DIR=%CAFFE2_ROOT%\\vs2015\\include ^
-  -DProtobuf_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\libprotobuf.lib ^
-  -DProtobuf_PROTOC_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\libprotoc.lib ^
-  -DProtobuf_LITE_LIBRARIES=%CAFFE2_ROOT%\\vs2015\\lib\\libprotobuf-lite.lib ^
   -DEIGEN3_ROOT_DIR=%CAFFE2_ROOT%\\third_party\\eigen ^
   -DCUB_INCLUDE_DIR=%CAFFE2_ROOT%\\vs2015\\include ^
   -DLMDB_DIR=%CAFFE2_ROOT%\\vs2015 ^
