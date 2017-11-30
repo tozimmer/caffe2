@@ -14,7 +14,7 @@ if NOT DEFINED CMAKE_BUILD_TYPE (
 )
 
 if NOT DEFINED USE_CUDA (
-  set USE_CUDA=OFF
+  set USE_CUDA=ON
 )
 
 if NOT DEFINED CMAKE_BUILD_TYPE (
@@ -33,7 +33,7 @@ if NOT DEFINED CMAKE_GENERATOR (
       exit /b
     )
   ) else (
-    :: In default we use win64 VS 2017.
+    :: In default we use win64 VS 2015.
     set CMAKE_GENERATOR="Visual Studio 14 2015 Win64"
   )
 )
@@ -66,7 +66,7 @@ cmake .. ^
   -DUSE_ROCKSDB=OFF ^
   -DUSE_OPENCV=OFF ^
   -DBUILD_SHARED_LIBS=OFF ^
-  -DBUILD_PYTHON=OFF^
+  -DBUILD_PYTHON=ON^
   -DPROTOBUF_PROTOC_EXECUTABLE=%CAFFE2_ROOT%\build_host_protoc\bin\protoc.exe ^
   || goto :label_error
 
