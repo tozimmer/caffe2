@@ -9,6 +9,13 @@
 SET ORIGINAL_DIR=%cd%
 SET CAFFE2_ROOT=%~dp0%..
 
+:: Set library directories, change path accordingly
+SET LMDB_DIR=C:\build\lmd_msvc14
+SET LEVELDB_ROOT=C:\build\leveldb_msvc14
+SET SNAPPY_ROOT_DIR=C:\build\snappy_msvc14
+SET GFLAGS_ROOT_DIR=C:\build\gflags\build
+SET GLOG_ROOT_DIR=C:\build\glog\build
+
 if NOT DEFINED CMAKE_BUILD_TYPE (
   set CMAKE_BUILD_TYPE=Release
 )
@@ -61,13 +68,14 @@ cmake .. ^
   -DUSE_NNPACK=OFF ^
   -DUSE_GLOG=OFF ^
   -DUSE_GFLAGS=OFF ^
-  -DUSE_LMDB=OFF ^
+  -DUSE_LMDB=ON ^
   -DUSE_LEVELDB=OFF ^
   -DUSE_ROCKSDB=OFF ^
   -DUSE_OPENCV=OFF ^
   -DBUILD_SHARED_LIBS=OFF ^
   -DBUILD_PYTHON=ON^
   -DPROTOBUF_PROTOC_EXECUTABLE=%CAFFE2_ROOT%\build_host_protoc\bin\protoc.exe ^
+  -DLMDB_DIR=%LMDB_DIR% ^
   || goto :label_error
 
 :: Actually run the build
